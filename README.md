@@ -1,6 +1,8 @@
 # Examples
 
-```
+```py
+import ScheduleTweet
+
 consumer_key = "1"
 consumer_secret = "2"
 access_token = "3"
