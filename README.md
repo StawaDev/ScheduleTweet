@@ -2,6 +2,7 @@
 
 ```py
 import ScheduleTweet
+import asyncio
 
 consumer_key = "1"
 consumer_secret = "2"
