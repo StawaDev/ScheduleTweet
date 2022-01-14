@@ -19,7 +19,7 @@ class ClientData:
         self.access_token = access_token
         self.access_token_secret = access_token_secret
 
-    def data(self):
+    async def data(self):
         global consumer_key, consumer_secret, access_token, access_token_secret
         consumer_key = self.consumer_key
         consumer_secret = self.consumer_secret
@@ -28,18 +28,18 @@ class ClientData:
 
 
 class TweetClient:
-    def setup():
+    async def setup():
         setup = tweepy.OAuthHandler(
             consumer_key=consumer_key, consumer_secret=consumer_secret
         )
         setup.set_access_token(access_token, access_token_secret)
 
-    def send_tweet(message: str) -> None:
-        SendTweet = tweepy.API(TweetClient.setup())
+    async def send_tweet(message: str) -> None:
+        SendTweet = tweepy.API(await TweetClient.setup())
         SendTweet.update_status(status=message)
 
 
 class Scheduled:
-    def send(message: str) -> None:
-        schedule.every().day.at("07:15").do(TweetClient.send_tweet(message=message))
+    async def send(message: str, hour: int, minute: int) -> None:
+        schedule.every().day.at(f"{hour}:{minute}").do(await TweetClient.send_tweet(message=message))
         return f"[ {time} ] - Sended!"
