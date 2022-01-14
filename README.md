@@ -15,6 +15,9 @@ Tweet = ClientData(
     access_token_secret=access_token_secret,
 )
 
-Send = Scheduled.send(message="Test")
-print(Send)
+async def a1():
+    Send = await Scheduled.send(message="Test", hour="13", minute="05")
+    print(Send)
+
+asyncio.run(a1())
 ```
