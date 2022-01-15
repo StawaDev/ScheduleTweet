@@ -26,4 +26,12 @@ async def a1():
 
 
 asyncio.run(a1())
+
+async def a2():
+        print(await Tweet.data())
+        Send = await TweetClient.schedule_send(message="Hello 123456.", timer="20:40")
+        print(Send)
+
+
+asyncio.run(a2())
 ```
