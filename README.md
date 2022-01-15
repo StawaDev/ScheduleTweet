@@ -1,4 +1,10 @@
-# Examples
+### Installation
+
+```py
+pip install git+https://github.com/StawaDev/ScheduleTweet
+```
+
+### Examples
 
 ```py
 import ScheduleTweet
