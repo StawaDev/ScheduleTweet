@@ -8,17 +8,22 @@ consumer_key = "1"
 consumer_secret = "2"
 access_token = "3"
 access_token_secret = "4"
+bearer_token = "5"
 
-Tweet = ClientData(
+Tweet = TweetClient(
     consumer_key=consumer_key,
     consumer_secret=consumer_secret,
     access_token=access_token,
     access_token_secret=access_token_secret,
+    bearer_token=bearer_token,
 )
 
+
 async def a1():
-    Send = await Scheduled.send(message="Test", hour="13", minute="05")
+    print(await Tweet.data())
+    Send = await TweetClient.send_tweet(message="Hey Bro.")
     print(Send)
+
 
 asyncio.run(a1())
 ```
