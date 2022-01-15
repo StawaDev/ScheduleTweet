@@ -6,5 +6,5 @@ setup(
     author="StawaDev",
     packages=find_packages(),
     install_requires=["tweepy"],
-    license="MIT"
+    license="MIT",
 )
