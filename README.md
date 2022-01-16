@@ -6,6 +6,8 @@ pip install git+https://github.com/StawaDev/ScheduleTweet
 
 ### Examples
 
+This is a simple example how to use ScheduleTweet! More examples can be found in [here!](https://github.com/StawaDev/ScheduleTweet/tree/main/Examples)
+
 ```py
 import ScheduleTweet
 import asyncio
