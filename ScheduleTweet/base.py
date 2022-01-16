@@ -50,7 +50,7 @@ class TweetClient:
         return f"[ {time} ] - Sended! with messages: " + message
 
     async def send_tweet_media(
-        self, message: str, media: str, media_2: Optional[str] = None
+        self, message: Optional[str], media: str, media_2: Optional[str] = None
     ) -> str:
         """
         Currently using Twitter API Elevated Access
@@ -70,9 +70,20 @@ class TweetClient:
 
         if not media_2:
             client.create_tweet(text=message, media_ids=[data.media_id_string])
-        return f"Information of the media uploaded: \nMediaID: {str(data.media_id)} \nMedia Size: {str(data.size)} \nMedia Type: {str(data.image['image_type'])}"
+            return f"Information of the media uploaded: \nMediaID: {str(data.media_id)} \nMedia Size: {str(data.size)} \nMedia Type: {str(data.image['image_type'])}"
 
-    async def schedule_send(self, message: str, timer: str):
+        if media_2:
+            data2 = api.media_upload(media_2)
+            client.create_tweet(
+                text=message, media_ids=[data.media_id_string, data2.media_id_string]
+            )
+            return f"Information of the media uploaded ({media}): \nMediaID: {str(data.media_id)} \nMedia Size: {str(data.size)} \nMedia Type: {str(data.image['image_type'])} \n\nInformation of the media uploaded ({media_2}): \nMediaID: {str(data2.media_id)} \nMedia Size: {str(data2.size)} \nMedia Type: {str(data2.image['image_type'])}"
+
+    async def schedule_send(self, message: str, timer: str) -> str:
+        """
+        Currently using Twitter API Elevated Access
+        """
+
         def da():
             client = tweepy.Client(
                 bearer_token=self.bearer_token,
@@ -85,5 +96,44 @@ class TweetClient:
             print(f"[ {time} ] - Sended! with messages: " + message)
 
         schedule.every().day.at(timer).do(da)
+        while True:
+            schedule.run_pending()
+
+    async def schedule_media_send(
+        self, message: Optional[str], media: str, media_2: Optional[str], time: str
+    ) -> str:
+        """
+        Currently using Twitter API Elevated Access
+        """
+
+        def al():
+            auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
+            auth.set_access_token(self.access_token, self.access_token_secret)
+            api = tweepy.API(auth)
+            data = api.media_upload(media)
+            client = tweepy.Client(
+                bearer_token=self.bearer_token,
+                consumer_key=self.consumer_key,
+                consumer_secret=self.consumer_secret,
+                access_token=self.access_token,
+                access_token_secret=self.access_token_secret,
+            )
+            if not media_2:
+                client.create_tweet(text=message, media_ids=[data.media_id_string])
+                print(
+                    f"Information of the media uploaded: \nMediaID: {str(data.media_id)} \nMedia Size: {str(data.size)} \nMedia Type: {str(data.image['image_type'])}"
+                )
+
+            if media_2:
+                data2 = api.media_upload(media_2)
+                client.create_tweet(
+                    text=message,
+                    media_ids=[data.media_id_string, data2.media_id_string],
+                )
+                print(
+                    f"Information of the media uploaded ({media}): \nMediaID: {str(data.media_id)} \nMedia Size: {str(data.size)} \nMedia Type: {str(data.image['image_type'])} \n\nInformation of the media uploaded ({media_2}): \nMediaID: {str(data2.media_id)} \nMedia Size: {str(data2.size)} \nMedia Type: {str(data2.image['image_type'])}"
+                )
+
+        schedule.every().day.at(time).do(al)
         while True:
             schedule.run_pending()
